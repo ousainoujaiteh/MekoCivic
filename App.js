@@ -1,23 +1,109 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import Expo from 'expo';
+import React, { Component } from 'react';
+import { Root , Drawer} from './config/router';
+import {
+  Asset,
+  AppLoading,
+} from 'expo';
+import { ApolloProvider, createNetworkInterface, ApolloClient } from 'react-apollo'
+import {
+    View,
+    TextInput,
+    Button,
+    Image,
+    Text,
+    StyleSheet,
+    TouchableHighlight
+} from 'react-native'
 
-export default class App extends React.Component {
+
+// __SIMPLE_API_ENDPOINT_ looks similar to: `https://api.graph.cool/simple/v1/<PROJECT_ID>`
+const networkInterface = createNetworkInterface({ uri: 'https://api.graph.cool/simple/v1/cj69ojt6p08690196b7qwi1h2' })
+const client = new ApolloClient({ networkInterface })
+
+export default class App extends Component {
+  constructor(){
+    super();
+    this.state = {
+      isReady:false
+    };
+  }
+  async componentWillMount() {
+   await Expo.Font.loadAsync({
+     Roboto: require("native-base/Fonts/Roboto.ttf"),
+     Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+     Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
+   });
+
+   this.setState({ isReady: true });
+ }
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
-    );
+     if (!this.state.isReady) {
+       return <AppLoading />;
+     }
+
+     return ( <ApolloProvider client = { client } >
+         <Root />
+         </ApolloProvider>
+     )
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+
+
+/*import React from 'react'
+import { ApolloProvider, createNetworkInterface, ApolloClient } from 'react-apollo'
+import ListPage from './src/Components/Post/ListPage'
+import CreatePage from './src/Components/Post/CreatePage';
+import {
+    View,
+    TextInput,
+    Button,
+    Image,
+    Text,
+    StyleSheet,
+    TouchableHighlight
+} from 'react-native';
+import {
+  Asset,
+  AppLoading,
+} from 'expo';
+
+
+// __SIMPLE_API_ENDPOINT_ looks similar to: `https://api.graph.cool/simple/v1/<PROJECT_ID>`
+const networkInterface = createNetworkInterface({ uri: 'https://api.graph.cool/simple/v1/cj69ojt6p08690196b7qwi1h2' })
+const client = new ApolloClient({ networkInterface })
+
+export default class App extends React.Component {
+
+
+  constructor(){
+    super();
+    this.state = {
+      isReady:false
+    };
+  }
+  async componentWillMount() {
+   await Expo.Font.loadAsync({
+     Roboto: require("native-base/Fonts/Roboto.ttf"),
+     Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+     Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
+   });
+
+   this.setState({ isReady: true });
+ }
+
+    render() {
+      if (!this.state.isReady) {
+        return <AppLoading />;
+      }
+        return ( <ApolloProvider client = { client } >
+            <ListPage / >
+            </ApolloProvider>
+        )
+    }
+
+}
+
+*/
